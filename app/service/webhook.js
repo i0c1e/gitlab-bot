@@ -36,7 +36,16 @@ const REDIS_VAL = {
 }
 
 class WebhookService extends Service {
+
+  async translateRebootAlert(data){
+    return {
+      msgtype: 'text',
+      text: { content: data},
+    };
+  }
+
   async translateMsg(data) {
+    console.log(data)
     const { object_kind } = data || {};
     if (!OBJECT_KIND[object_kind]) {
       return {};
@@ -148,7 +157,8 @@ class WebhookService extends Service {
     content.push('**流水线详情：**\n')
 
     name && content.push(this.generateListItem('操作人', `\`${name}\``))
-
+    content.push(['commit_id',`${commit.id}`.substring(0,6)].join(': '))
+    content.push(['开始时间',`${commit.timestamp}`].join(': '))
     duration && content.push(this.generateListItem('总耗时', `${this.formatDuration(duration)}`))
     !_.isEmpty(stages) && content.push(this.generateListItem(`共${stages.length}个阶段`, `${stages.join(' / ')}`))
     !_.isEmpty(mr) && content.push(this.generateListItem('合并详情', `[${mr.title}](${mr.url})，\`${mr.source_branch}\`合并至\`${mr.target_branch}\``));

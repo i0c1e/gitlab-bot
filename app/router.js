@@ -10,6 +10,8 @@ const contextPathEndWithSlash = S(contextPath).endsWith('/') ? contextPath : con
 module.exports = app => {
   const { router, controller } = app;
   app.logger.info('===> contextPath: ', contextPath);
+
+  
   
   router.post(`${contextPathEndWithSlash}:path`, controller.home.index);
   router.post(`${contextPathEndWithSlash}`, controller.home.index);
